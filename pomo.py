@@ -1,10 +1,9 @@
 """Pomodoro app main class"""
 import sys
 import os
-import csv
+import json
 from datetime import datetime
 import time
-import pytz
 
 class Pomodoro:
     def __init__(self):
@@ -17,14 +16,16 @@ class Pomodoro:
             self.begin_timer = input("Start(y/n): ")
             
             if self.begin_timer == 'n':
+                print('See you later!')
                 sys.exit()
             
             self.timer(self.set_minutes, self.begin_timer)
 
-    # def saving_open(self, start_time):
-    #     filename = 'records.csv'
-    #     with open(filename, mode='a') as f:
-    #         f.write(time.strftime('%Y-%m-%d %H:%M', time.localtime(start_time)))
+    def saving_result(self, result):
+        filename = 'records.json'
+        with open(filename, mode='a') as f:
+            
+            f.write(result)
         
 
     def timer(self, set_minutes, begin_timer):
@@ -39,9 +40,14 @@ class Pomodoro:
                 time.sleep(0.99999)
                 os.system("CLS")
                 
-            if time_set == 0:
-                os.system("CLS")
-                print("Complete!")
+                if remaining_time <= 1:
+                    os.system("CLS")
+                    print("Complete!")
+                    date_stamp = time.strftime('%Y-%m-%d', time.localtime(start_time))
+                    start_time_literal = time.strftime('%I:%M %p')
+                    result = {date_stamp: (start_time_literal, set_minutes)}
+                    self.saving_result(str(result))
+                
         else:
             print('See you later!')
             sys.exit()
@@ -51,15 +57,3 @@ if __name__ == '__main__':
     pom = Pomodoro()
     pom.run_timer()
             
-
-def time_zone():
-    
-    tz_NY = pytz.timezone('America/New_York')
-    datetime_NY = datetime.now(tz_NY)
-    current_time = datetime_NY.strftime("%I:%M %p")
-
-    tz_Seoul = pytz.timezone('Asia/Seoul')
-    datetime_Seoul = datetime.now(tz_Seoul)
-    seoul_time = datetime_Seoul.strftime("%I:%M %p")
-
-    pass
