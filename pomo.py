@@ -6,6 +6,7 @@ import csv
 import time
 import record_keeper
 import timer
+from playsound import playsound
 
 class Pomodoro:
     def __init__(self):
@@ -35,11 +36,16 @@ class Pomodoro:
             print(
                 f"Finished!\nCompleted {record_keeper.check_set_number(time.time())} pomodoro(s) today!"
                 )
+            
+            playsound("alarm.mp3")
 
             if record_keeper.check_set_number(time.time()) % 4 != 0:
                 timer.short_rest()
+                playsound("alarm.mp3")
+
             else:
                 timer.long_rest()
+                playsound("alarm.mp3")
 
         else:
             self.exit_program()
