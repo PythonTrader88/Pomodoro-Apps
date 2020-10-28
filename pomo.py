@@ -32,7 +32,14 @@ class Pomodoro:
                 self.exit_program()
             
             timer.timer(self.set_minutes, self.begin_timer)
-            timer.short_rest()
+            print(
+                f"Finished!\nCompleted {record_keeper.check_set_number(time.time())} pomodoro(s) today!"
+                )
+
+            if record_keeper.check_set_number(time.time()) % 4 != 0:
+                timer.short_rest()
+            else:
+                timer.long_rest()
 
         else:
             self.exit_program()
