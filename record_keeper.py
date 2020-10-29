@@ -16,7 +16,7 @@ def check_set_number(date):
         
         return count_today
 
-def saving_result(date, began_time,minutes):
+def saving_result(date, began_time, minutes):
     filename = 'records.csv'
     if not os.path.exists(filename):
         with open(filename, mode='w') as f:
