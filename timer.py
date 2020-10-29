@@ -26,7 +26,7 @@ def timer(minutes, begin_timer):
                 os.system("CLS")
                 date_stamp = time.strftime('%Y-%m-%d', attributes.local_start)
                 started_time = time.strftime('%I:%M %p', attributes.local_start)
-                record_keeper.saving_result(date_stamp, started_time, minutes)          
+                record_keeper.saving_result(date_stamp, started_time, minutes)
 
 def short_rest(minutes=5):
     attribute = TimeVariables(minutes)
@@ -37,7 +37,7 @@ def short_rest(minutes=5):
         time.sleep(0.99999)
         os.system("CLS")
 
-def long_rest(minutes = 30):
+def long_rest(minutes=30):
     attribute = TimeVariables(minutes)
 
     while time.time() < attribute.end_time:

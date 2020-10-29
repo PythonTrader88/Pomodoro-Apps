@@ -1,4 +1,8 @@
 import tkinter as tk
+from playsound import playsound
+import threading
+import record_keeper
+import time
 
 
 class Pomodoro(tk.Frame):
@@ -8,6 +12,8 @@ class Pomodoro(tk.Frame):
         self.show_widgets()
         self.seconds_left = 1500
         self._timer_on = False
+        self.run_set = True
+        self.entered_min = 30
 
     def create_widgets(self):
         self.btn_start =tk.Button(self, text="Start", relief=tk.RAISED, font=(None, 10), bg="green", command=self.start_button) 
@@ -46,7 +52,12 @@ class Pomodoro(tk.Frame):
 
         if self.seconds_left:
             self.seconds_left -= 1
-            self._timer_on = self.after(1000, self.countdown)    
+            self._timer_on = self.after(1000, self.countdown)
+            if self.seconds_left < 1 and self._timer_on:
+                self.thread_sn()
+                if self.run_set:
+                    self.thread_rec()
+                
         else:
             self._timer_on = False
 
@@ -67,21 +78,41 @@ class Pomodoro(tk.Frame):
     def pom_button(self):
         self.seconds_left = int(self.ent_pom.get()) * 60
         self.lbl_time['text'] = self.convert_minutes()
+        self.run_set = True
+        self.entered_min = self.ent_pom.get()
 
     def short_button(self):
         self.seconds_left = int(self.ent_short.get()) * 60
         self.lbl_time['text'] = self.convert_minutes()
+        self.run_set = False
 
     def long_button(self):
         self.seconds_left = int(self.ent_long.get()) * 60
         self.lbl_time['text'] = self.convert_minutes()
+        self.run_set = False
 
     def convert_minutes(self):
         return f"{self.seconds_left//60:02.0f}:{self.seconds_left % 60:02}"
 
+    def thread_sn(self):
+        threadsound = threading.Thread(target=playsound("alarm.mp3"))
+        threadsound.start()
+        
+    def thread_rec(self):
+        record = threading.Thread(
+            target=record_keeper.saving_result(
+                time.strftime('%Y-%m-%d', time.localtime()), 
+                time.strftime('%I:%M %p', time.localtime()),
+                self.entered_min)
+            )
+        record.start()
+
 if __name__ == '__main__':
     root = tk.Tk()
     pomodoro = Pomodoro(root)
+    p1 = tk.PhotoImage(file = 'icon.png')
+    root.iconphoto(False, p1)
+    root.title('Pomodoro')
     pomodoro.grid()
     root.mainloop()
 
