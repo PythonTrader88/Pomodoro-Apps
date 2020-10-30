@@ -3,3 +3,8 @@ gui.py
 records.csv
 kivyclock.py
 pomodoro_app.code-workspace
+/ignore
+pomo_t.spec
+/dist
+/build
+/__pycache__/pomo_t.cpython-38.pyc
