@@ -20,11 +20,11 @@ def saving_result(date, began_time, minutes):
     filename = 'records.csv'
     if not os.path.exists(filename):
         with open(filename, mode='w') as f:
-            csv_writer = csv.DictWriter(f, fieldnames=['Date', 'Time_Finished', 'Minutes'])
+            csv_writer = csv.DictWriter(f, fieldnames=['Date', 'Time_Finished', 'Minutes'], lineterminator='\n')
             csv_writer.writeheader()
             
     with open(filename, mode='a') as f:
-        csv_writer = csv.DictWriter(f, fieldnames=['Date', 'Time_Finished', 'Minutes'])
+        csv_writer = csv.DictWriter(f, fieldnames=['Date', 'Time_Finished', 'Minutes'], lineterminator = '\n')
         csv_writer.writerow({
             'Date': date,
             'Time_Finished': began_time,

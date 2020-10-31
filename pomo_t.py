@@ -13,9 +13,10 @@ class Pomodoro(tk.Frame):
         self.seconds_left = 1500
         self._timer_on = False
         self.run_set = True
-        self.entered_min = 30
+        self.entered_min = self.lbl_time['text']
 
     def create_widgets(self):
+        self.lbl_npom = tk.Label(self, text=f"Complete: ", font=(None, 10), padx=3)
         self.btn_start =tk.Button(self, text="Start", relief=tk.RAISED, font=(None, 10), bg="green", command=self.start_button) 
         self.btn_stop =tk.Button(self, text="Stop", relief=tk.RAISED, font=(None, 10), bg='orange', command=self.stop_button) 
         self.lbl_time = tk.Label(self, text="25:00", relief=tk.SUNKEN, font=(None, 20), padx=15)
@@ -34,9 +35,10 @@ class Pomodoro(tk.Frame):
         self.ent_long.focus_set()
                 
     def show_widgets(self):    
-        self.btn_start.grid(row=0, column=0)
-        self.btn_stop.grid(row=0, column=2) 
-        self.lbl_time.grid(row=0, column=1, pady=5)
+        self.lbl_npom.grid(row=0, column=1, pady=2)
+        self.btn_start.grid(row=1, column=0)
+        self.btn_stop.grid(row=1, column=2) 
+        self.lbl_time.grid(row=1, column=1, pady=5)
 
         self.btn_pom.grid(row=2, column=0)
         self.btn_short.grid(row=2, column=1)
@@ -57,6 +59,7 @@ class Pomodoro(tk.Frame):
                 self.thread_sn()
                 if self.run_set:
                     self.thread_rec()
+                    self.lbl_npom['text'] = f"Complete: {record_keeper.check_set_number(time.time())}"
                 
         else:
             self._timer_on = False
@@ -106,6 +109,7 @@ class Pomodoro(tk.Frame):
                 self.entered_min)
             )
         record.start()
+    
 
 if __name__ == '__main__':
     root = tk.Tk()
