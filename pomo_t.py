@@ -13,13 +13,14 @@ class Pomodoro(tk.Frame):
         self.seconds_left = 1500
         self._timer_on = False
         self.run_set = True
-        self.entered_min = self.lbl_time['text']
+        self.entered_min = int(self.ent_pom.get()) * 60
 
     def create_widgets(self):
         self.lbl_npom = tk.Label(self, text=f"Complete: ", font=(None, 10), padx=3)
+        self.lbl_category = tk.Label(self, text="Category: ", font=(None, 10), padx=3)
         self.btn_start =tk.Button(self, text="Start", relief=tk.RAISED, font=(None, 10), bg="green", command=self.start_button) 
-        self.btn_stop =tk.Button(self, text="Stop", relief=tk.RAISED, font=(None, 10), bg='orange', command=self.stop_button) 
-        self.lbl_time = tk.Label(self, text="25:00", relief=tk.SUNKEN, font=(None, 20), padx=15)
+        self.btn_stop =tk.Button(self, text="Stop", relief=tk.RAISED, font=(None, 10), bg='orange', command=self.stop_timer) 
+        self.lbl_time = tk.Label(self, text=f"25:00", relief=tk.SUNKEN, font=(None, 20), padx=15)
         self.btn_pom = tk.Button(self, text="POMO", relief=tk.RAISED, font=(None, 10), command=self.pom_button)
         self.btn_short = tk.Button(self, text="Short", relief=tk.RAISED, font=(None, 10), command=self.short_button)
         self.btn_long = tk.Button(self, text="Long", relief=tk.RAISED, font=(None, 10), command=self.long_button)
@@ -33,6 +34,9 @@ class Pomodoro(tk.Frame):
         self.ent_long = tk.Entry(self, width=10)
         self.ent_long.insert(0, 15)
         self.ent_long.focus_set()
+        self.ent_category = tk.Entry(self, width=15)
+        self.ent_category.insert(0, "Coding")
+        self.ent_category.focus_set()
                 
     def show_widgets(self):    
         self.lbl_npom.grid(row=0, column=1, pady=2)
@@ -47,6 +51,9 @@ class Pomodoro(tk.Frame):
         self.ent_pom.grid(row=3, column=0, pady=5)
         self.ent_short.grid(row=3, column=1, pady=5)
         self.ent_long.grid(row=3, column=2, pady=5)
+        
+        self.lbl_category.grid(row=4, column=0, pady=2)
+        self.ent_category.grid(row=4, column=1, pady=2)
 
 
     def countdown(self):
@@ -55,7 +62,7 @@ class Pomodoro(tk.Frame):
         if self.seconds_left:
             self.seconds_left -= 1
             self._timer_on = self.after(1000, self.countdown)
-            if self.seconds_left < 1 and self._timer_on:
+            if self.seconds_left <= 0 and self._timer_on:
                 self.thread_sn()
                 if self.run_set:
                     self.thread_rec()
@@ -68,11 +75,6 @@ class Pomodoro(tk.Frame):
         self.stop_timer()
         self.countdown()
 
-    def stop_button(self):
-        if self._timer_on:
-            self.after_cancel(self._timer_on)
-            self._timer_on = False
-
     def stop_timer(self):
         if self._timer_on:
             self.after_cancel(self._timer_on)
@@ -83,16 +85,19 @@ class Pomodoro(tk.Frame):
         self.lbl_time['text'] = self.convert_minutes()
         self.run_set = True
         self.entered_min = self.ent_pom.get()
+        self.start_button()
 
     def short_button(self):
         self.seconds_left = int(self.ent_short.get()) * 60
         self.lbl_time['text'] = self.convert_minutes()
         self.run_set = False
+        self.start_button()
 
     def long_button(self):
         self.seconds_left = int(self.ent_long.get()) * 60
         self.lbl_time['text'] = self.convert_minutes()
         self.run_set = False
+        self.start_button()
 
     def convert_minutes(self):
         return f"{self.seconds_left//60:02.0f}:{self.seconds_left % 60:02}"
@@ -106,7 +111,7 @@ class Pomodoro(tk.Frame):
             target=record_keeper.saving_result(
                 time.strftime('%Y-%m-%d', time.localtime()), 
                 time.strftime('%I:%M %p', time.localtime()),
-                self.entered_min)
+                self.entered_min, self.ent_category.get())
             )
         record.start()
     

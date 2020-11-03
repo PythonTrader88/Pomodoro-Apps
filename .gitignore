@@ -8,3 +8,4 @@ pomo_t.spec
 /dist
 /build
 /__pycache__/pomo_t.cpython-38.pyc
+/CLI

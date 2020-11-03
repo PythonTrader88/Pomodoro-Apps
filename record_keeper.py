@@ -16,19 +16,22 @@ def check_set_number(date):
         
         return count_today
 
-def saving_result(date, began_time, minutes):
+def saving_result(date, began_time, minutes, category):
     filename = 'records.csv'
+    fields = ['Date', 'Time_Finished', 'Minutes', 'category']
     if not os.path.exists(filename):
         with open(filename, mode='w') as f:
-            csv_writer = csv.DictWriter(f, fieldnames=['Date', 'Time_Finished', 'Minutes'], lineterminator='\n')
+            csv_writer = csv.DictWriter(f, fieldnames=fields, lineterminator='\n')
             csv_writer.writeheader()
             
     with open(filename, mode='a') as f:
-        csv_writer = csv.DictWriter(f, fieldnames=['Date', 'Time_Finished', 'Minutes'], lineterminator = '\n')
+        csv_writer = csv.DictWriter(f, fieldnames=fields, lineterminator = '\n')
         csv_writer.writerow({
             'Date': date,
             'Time_Finished': began_time,
-            'Minutes': minutes})
+            'Minutes': minutes,
+            'category': category,
+            })
 
 
 # def check_set_number():
